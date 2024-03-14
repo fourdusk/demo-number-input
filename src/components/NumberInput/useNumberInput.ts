@@ -1,5 +1,6 @@
 import { Ref, ref } from 'vue'
 import { NumberValue, NumberInputInjection, NumberInputProps, NumberInputOption } from './types'
+import { sum } from './util'
 
 export const getDefaultProps = (): NumberInputProps => {
   return {
@@ -26,9 +27,12 @@ export const onIncrease = (
   opt: NumberInputOption & { modelValue?: Ref<NumberValue> }
 ) => {
   const { max, step } = opt
-  const value = Number(getCorrectionValue(Number(val.value ?? 0) + step, opt))
+  const num = sum([Number(val.value ?? 0), step])
+  const value = Number(getCorrectionValue(num, opt))
   if (value <= max) {
     val.value = value
+  } else {
+    val.value = max
   }
 }
 
@@ -37,9 +41,12 @@ export const onDecrease = (
   opt: NumberInputOption & { modelValue?: Ref<NumberValue> }
 ) => {
   const { min, step } = opt
-  const value = Number(getCorrectionValue(Number(val.value ?? 0) - step, opt))
+  const num = sum([Number(val.value ?? 0), -step])
+  const value = Number(getCorrectionValue(num, opt))
   if (value >= min) {
     val.value = value
+  } else {
+    val.value = min
   }
 }
 
@@ -104,7 +111,9 @@ export const getCorrectionValue = (
   const finalValue = Array.isArray(matchValue) ? value.slice(0, matchValue[0].length) : matchValue
   if (Number(value) > max) {
     return max
-  } else {
-    return finalValue
   }
+  if (Number(value) < min) {
+    return min
+  }
+  return finalValue
 }

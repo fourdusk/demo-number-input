@@ -19,9 +19,9 @@ import NumberInput from './components/NumberInput/index.vue'
 const num = ref('adsf')
 
 const opt = {
-  max: 5,
-  min: -5,
-  step: 1,
+  max: 3.14,
+  min: -6.78,
+  step: 0.2,
   precision: 2
 }
 
